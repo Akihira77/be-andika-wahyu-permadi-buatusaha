@@ -19,7 +19,7 @@ const CommentList: React.FC = () => {
 	}, []);
 
 	return (
-		<div className="container-fluid d-flex flex-column align-items-center pt-5">
+		<div className="container-fluid d-flex flex-column align-items-center py-5">
 			<h2>List Komentar</h2>
 			<div className="add__button mt-4">
 				<button

@@ -19,7 +19,7 @@ export const postComment = async (
 
 		return {
 			status: result.status,
-			response: result.data
+			response: result
 		};
 	} catch (error) {
 		console.log(error);
@@ -39,7 +39,7 @@ export const putComment = async (
 		const result = await axios.put(`${SERVER_URL}/comments/${id}`, data);
 		return {
 			status: result.status,
-			response: result.data
+			response: result
 		};
 	} catch (error) {
 		console.log(error);

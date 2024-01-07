@@ -4,7 +4,7 @@ import * as db from "../db/index.db.js";
 import { v4 as uuidv4 } from "uuid";
 
 class CommentService {
-	private readonly db;
+	private db;
 
 	constructor() {
 		this.db = db;
@@ -41,21 +41,20 @@ class CommentService {
 
 	edit(commentId: string, request: UpsertCommentDtoType): boolean {
 		try {
-			const updatedComments: CommentDtoType[] = this.db.comments.map(
-				(comment) => {
-					if (comment.id !== commentId) {
-						return comment;
-					}
-
-					return {
-						id: comment.id,
-						name: request.name,
-						comment: request.comment
-					};
+			this.db.comments.map((comment, index) => {
+				if (comment.id !== commentId) {
+					this.db.comments[index] = comment;
+					return comment;
 				}
-			);
 
-			this.db.comments = updatedComments;
+				const payload = {
+					id: comment.id,
+					name: request.name,
+					comment: request.comment
+				};
+				this.db.comments[index] = payload;
+				return payload;
+			});
 
 			return true;
 		} catch (error) {

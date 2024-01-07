@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CommentDTO } from "../utils/types.ts";
+import { ErrorObject, UpsertCommentDTO } from "../utils/types.ts";
 import { getCommentById, putComment } from "../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
 
 const EditComment: React.FC = () => {
 	const { id } = useParams();
-	const [commentData, setCommentData] = React.useState<CommentDTO>();
+	const [commentData, setCommentData] = React.useState<UpsertCommentDTO>();
+	const [errors, setErrors] = React.useState<ErrorObject>();
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -24,6 +25,7 @@ const EditComment: React.FC = () => {
 		} else if ("message" in response.data) {
 			notify(response.data.message, "success");
 		} else {
+			setErrors(response.data.error);
 			console.log(response);
 		}
 	};
@@ -48,7 +50,10 @@ const EditComment: React.FC = () => {
 		const findComment = async () => {
 			const { data } = await getCommentById(id!);
 
-			setCommentData(data.comment);
+			setCommentData({
+				name: data.comment.name,
+				comment: data.comment.comment
+			});
 		};
 
 		findComment();
@@ -58,6 +63,27 @@ const EditComment: React.FC = () => {
 		<>
 			<div className="container-fluid d-flex flex-column align-items-center pt-5">
 				<h2>Edit Komentar</h2>
+				{errors && (
+					<ul className="text-danger" style={{ width: "600px" }}>
+						{Object.entries(errors).map(([field, message]) => (
+							<li key={field}>
+								<span className="object__key d-block">
+									{field}
+								</span>
+								<ul>
+									{Array.isArray(message) &&
+										message.map((item, id) => (
+											<li key={id}>
+												<span className="object__value">
+													{item}
+												</span>
+											</li>
+										))}
+								</ul>
+							</li>
+						))}
+					</ul>
+				)}
 				<div
 					className="comment__field border border-black p-3 mt-5"
 					style={{ width: "600px" }}

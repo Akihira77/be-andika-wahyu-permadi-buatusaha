@@ -12,12 +12,9 @@ export type UpsertCommentResponseDTO = {
 	message: string;
 };
 
-export type SuccessResponse<TData> = {
-	status: number;
-	data: TData;
+export type ErrorObject = {
+	[fieldName: string]: string[];
 };
-
-export type ErrorObject = Record<string, string | number | boolean>;
 
 export type ApiResponse = {
 	status: number;

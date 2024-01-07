@@ -1,12 +1,8 @@
 import React from "react";
-import { CommentDTO } from "../utils/types.ts";
+import { CommentDTO, ErrorObject } from "../utils/types.ts";
 import { postComment } from "../utils/api.ts";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
-type ErrorObject = {
-	[fieldName: string]: string[];
-};
 
 const CreateComment: React.FC = () => {
 	const [commentData, setCommentData] = React.useState<CommentDTO>();
@@ -21,7 +17,6 @@ const CreateComment: React.FC = () => {
 		}
 
 		const { response } = await postComment(commentData);
-
 		if (typeof response === "string") {
 			notify(response, "error");
 		} else if ("message" in response.data) {
